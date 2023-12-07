@@ -75,6 +75,8 @@ const inputSummary: Credit.GenerateReportInput = {
         fontColor: '000000',
         backgroundColor: '',
         border: true,
+        boldRows: [13, 20, 27, 34, 41, 48],
+        boldColumns: [26, 27],
         rowBackgroundColors: [
             { startRow: 7, endRow: 13, color: '#fff2cc' },
             { startRow: 14, endRow: 20, color: '#ededed' },

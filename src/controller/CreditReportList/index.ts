@@ -3,10 +3,22 @@ import { Credit } from '../../model'
 
 // Modify the applyFormatting function to handle alignment
 function applyFormatting(row: ExcelJS.Row, formatOptions: Credit.GenerateReportInput['tableFormat'], rowHederBold = false) {
-    if (rowHederBold) {
-        row.font = { bold: rowHederBold };
+    const isBoldRow = formatOptions.boldRows && formatOptions.boldRows.includes(row.number);
+
+    if (rowHederBold || isBoldRow) {
+        row.font = { bold: true };
     }
 
+
+    if (formatOptions.boldColumns) {
+        row.eachCell((cell, colNumber) => {
+            const isBoldColumn = formatOptions.boldColumns?.includes(colNumber);
+            if (isBoldColumn) {
+                cell.font = { bold: true };
+            }
+        });
+    }
+    
     if (formatOptions.alignLeft) {
         row.eachCell((cell, colNumber) => {
             const alignment = formatOptions.alignLeft && formatOptions.alignLeft[colNumber - 1];
@@ -48,7 +60,7 @@ function applyFormatting(row: ExcelJS.Row, formatOptions: Credit.GenerateReportI
             const { startRow, endRow, color } = config;
             const rowIndex = row.number;
             
-            if (rowIndex >= startRow && rowIndex <= endRow) {
+            if (rowIndex >= startRow - 1 && rowIndex <= endRow - 1) {
                 row.fill = {
                     type: 'pattern',
                     pattern: 'solid',
@@ -78,7 +90,7 @@ function applyFormatting(row: ExcelJS.Row, formatOptions: Credit.GenerateReportI
 }
 
   
-  function GenerateReportAccountByCreditLine(data: Credit.GenerateReportInput): ExcelJS.Workbook {
+function GenerateReportAccountByCreditLine(data: Credit.GenerateReportInput): ExcelJS.Workbook {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet('Report');
 
@@ -91,7 +103,6 @@ function applyFormatting(row: ExcelJS.Row, formatOptions: Credit.GenerateReportI
         }
     });
     worksheet.addRow([]); // Empty row after headers
-
      // Add Subheader
     if (data.subHeader) {
         const dataNoRepeat = data.subHeader.filter((item, index) => index != data.tableFormat.repeatPosition - 1 ? item : '')
@@ -121,8 +132,7 @@ function applyFormatting(row: ExcelJS.Row, formatOptions: Credit.GenerateReportI
             })
         }
     }
-
-
+    
     if(data.tableFormat.mergeCell){
         data.tableFormat.mergeCell.forEach((mergeCell) => {
             worksheet.mergeCells(mergeCell);

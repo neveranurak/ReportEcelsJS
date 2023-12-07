@@ -10,6 +10,8 @@ interface TableFormat {
     removeColumn?: number[];
     boldHeaders?: boolean[];
     boldContent?: boolean[];
+    boldColumns?: number[];
+    boldRows?: number[];
     unshiftSubHeader?: boolean;
     mergeCell?: string[];
     rowBackgroundColors?: RowBackgroundColor[];

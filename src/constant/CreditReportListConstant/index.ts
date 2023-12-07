@@ -32,6 +32,7 @@ const inputAccountByCreditLine: Credit.GenerateReportInput = {
         boldContent: [false],
         alignLeft: ['left', 'right', 'right', 'right', 'right'],
         columnWidths: [20, 10, 10, 20, 10],
+        boldColumns: [2, 4],
         rowHeight: 10,
         fontSize: 10,
         fontColor: '000000',
