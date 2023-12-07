@@ -18,8 +18,11 @@ const inputComparisonReport: Credit.GenerateReportInput = {
     ],
     tableFormat: {
         // removeColumn: [6, 1],
-        subHeaderAlign: ['center', 'left'],
+        subHeaderAlign: [],
         mergeCell: ['B4:C4', 'D4:E4', 'F4:G4'],
+        subHeaderRepeat: 0,
+        unshiftSubHeader: false,
+        repeatPosition: 0,
         subHeaderHeight: 20,
         subHeaderVerticalAlign: 'bottom',
         boldHeaders: [true, false, false],
@@ -30,7 +33,7 @@ const inputComparisonReport: Credit.GenerateReportInput = {
         fontSize: 10,
         fontColor: '000000',
         backgroundColor: '',
-        border: true,
+        border: false,
       },
 };
 

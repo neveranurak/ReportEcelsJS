@@ -1,13 +1,12 @@
-import { inputAccountByCreditLine, inputAccountByStatus, inputComparison } from './constant';
+import { inputAccountByCreditLine, inputAccountByStatus, inputComparison, inputSummary } from './constant';
 const GenerateReportAccountByCreditLine = require('./controller/CreditReportList');
-const GenerateReportAccountByStatus = require('./controller/StatusReportList');
-const GenerateReportComparison = require('./controller/ComparisonReportList');
 
 
 
 const excelWorkbookCreditLine = GenerateReportAccountByCreditLine(inputAccountByCreditLine);
 const excelWorkbookStatus = GenerateReportAccountByCreditLine(inputAccountByStatus);
 const excelWorkbookComparison = GenerateReportAccountByCreditLine(inputComparison);
+const excelWorkbookSummary = GenerateReportAccountByCreditLine(inputSummary);
 
 // Save the workbook to a file
 // //------------------------------------------------------------------------------------
@@ -26,6 +25,14 @@ excelWorkbookStatus.xlsx.writeFile('output/AccountStatusReport.xlsx')
 });
 // //------------------------------------------------------------------------------------
 excelWorkbookComparison.xlsx.writeFile('output/ComparisonReport.xlsx')
+.then(() => {
+    console.log('Excel file written successfully');
+})
+.catch((error: any) => {
+    console.error('Error writing Excel file:', error);
+});
+// //------------------------------------------------------------------------------------
+excelWorkbookSummary.xlsx.writeFile('output/Summary.xlsx')
 .then(() => {
     console.log('Excel file written successfully');
 })

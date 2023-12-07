@@ -22,6 +22,9 @@ const inputAccountByStatus: Credit.GenerateReportInput = {
         // removeColumn: [6, 1],
         subHeaderAlign: ['left'],
         subHeaderHeight: 20,
+        unshiftSubHeader: false,
+        subHeaderRepeat: 0,
+        repeatPosition: 0,
         subHeaderVerticalAlign: 'bottom',
         boldHeaders: [true, false, false],
         boldContent: [false, false, false, false, false, false, true],
@@ -31,7 +34,7 @@ const inputAccountByStatus: Credit.GenerateReportInput = {
         fontSize: 10,
         fontColor: '000000',
         backgroundColor: '',
-        border: true,
+        border: false,
       },
 }
 

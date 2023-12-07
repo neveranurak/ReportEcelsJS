@@ -1,14 +1,24 @@
 type CellValue = string | number;
 
+interface RowBackgroundColor {
+  startRow: number;
+  endRow: number;
+  color: string;
+}
+
 interface TableFormat {
     removeColumn?: number[];
     boldHeaders?: boolean[];
     boldContent?: boolean[];
+    unshiftSubHeader?: boolean;
     mergeCell?: string[];
+    rowBackgroundColors?: RowBackgroundColor[];
     alignLeft?: (string | undefined)[];
     subHeaderAlign: string[];
     subHeaderVerticalAlign: string;
     subHeaderHeight: number;
+    repeatPosition: number;
+    subHeaderRepeat: number;
     columnWidths?: number[];
     rowHeight?: number;
     fontSize?: number;

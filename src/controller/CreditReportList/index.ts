@@ -43,9 +43,37 @@ function applyFormatting(row: ExcelJS.Row, formatOptions: Credit.GenerateReportI
         };
     }
 
+    if (formatOptions.rowBackgroundColors && formatOptions.rowBackgroundColors.length > 0) {
+        formatOptions.rowBackgroundColors.forEach((config) => {
+            const { startRow, endRow, color } = config;
+            const rowIndex = row.number;
+            
+            if (rowIndex >= startRow && rowIndex <= endRow) {
+                row.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: color.replace('#','') },
+                };
+            }
+        });
+    }
+    
+
     if (formatOptions.fontWeight) {
         row.font = row.font || {};
         row.font.bold = formatOptions.fontWeight === 'bold';
+    }
+
+    // Add borders
+    if (formatOptions.border) {
+        row.eachCell((cell) => {
+            cell.border = {
+                top: { style: 'thin' },
+                left: { style: 'thin' },
+                bottom: { style: 'thin' },
+                right: { style: 'thin' },
+            };
+        });
     }
 }
 
@@ -66,7 +94,8 @@ function applyFormatting(row: ExcelJS.Row, formatOptions: Credit.GenerateReportI
 
      // Add Subheader
     if (data.subHeader) {
-        data.subHeader.forEach((header, rowIndex) => {
+        const dataNoRepeat = data.subHeader.filter((item, index) => index != data.tableFormat.repeatPosition - 1 ? item : '')
+        dataNoRepeat.forEach((header, rowIndex) => {
             const subHeader = worksheet.addRow(header);
             subHeader.font = { bold: true };
             const mappedAlignment = data.tableFormat.subHeaderAlign[rowIndex] === 'left' ? 'left' : data.tableFormat.subHeaderAlign[rowIndex] === 'right' ? 'right' : 'center';
@@ -76,7 +105,23 @@ function applyFormatting(row: ExcelJS.Row, formatOptions: Credit.GenerateReportI
                 subHeader.height = data.tableFormat.subHeaderHeight;
             }
         })
+        if (data.subHeader && data.tableFormat.subHeaderRepeat && data.tableFormat.repeatPosition) {
+            const dataRepeat = data.subHeader[data.tableFormat.repeatPosition - 1]
+            const repeatedArray = Array.from({ length: data.tableFormat.subHeaderRepeat * 2 }, (_, index) => dataRepeat[index % dataRepeat.length]);
+            if (data.tableFormat.unshiftSubHeader) repeatedArray.unshift('');
+            [repeatedArray].forEach((header, rowIndex) => {
+                const subHeader = worksheet.addRow(header);
+                subHeader.font = { bold: true };
+                const mappedAlignment = data.tableFormat.subHeaderAlign[rowIndex] === 'left' && data.tableFormat.subHeaderAlign.length != 0 ? 'left' : data.tableFormat.subHeaderAlign[rowIndex] === 'right' && data.tableFormat.subHeaderAlign.length != 0 ? 'right' : 'center';
+                const mappedVerticalAlignment = data.tableFormat.subHeaderVerticalAlign === 'bottom' ? 'bottom' : data.tableFormat.subHeaderVerticalAlign === 'top' ? 'top' : 'middle';
+                subHeader.alignment = { horizontal: mappedAlignment, vertical: mappedVerticalAlignment};
+                if (data.tableFormat.subHeaderHeight) {
+                    subHeader.height = data.tableFormat.subHeaderHeight;
+                }
+            })
+        }
     }
+
 
     if(data.tableFormat.mergeCell){
         data.tableFormat.mergeCell.forEach((mergeCell) => {
