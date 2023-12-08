@@ -132,7 +132,7 @@ function GenerateReportAccountByCreditLine(data: Credit.GenerateReportInput): Ex
             })
         }
     }
-    
+
     if(data.tableFormat.mergeCell){
         data.tableFormat.mergeCell.forEach((mergeCell) => {
             worksheet.mergeCells(mergeCell);
@@ -141,7 +141,6 @@ function GenerateReportAccountByCreditLine(data: Credit.GenerateReportInput): Ex
 
     data.data.forEach((rowData, rowIndex) => {
         const maskedRowData = rowData.map((value) => {
-            // Apply mask to numeric columns
             if (typeof value === 'number') {
                 return value.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
             }
@@ -161,6 +160,13 @@ function GenerateReportAccountByCreditLine(data: Credit.GenerateReportInput): Ex
 
     if (data.tableFormat.removeColumn) {
         worksheet.spliceColumns(data.tableFormat.removeColumn[0], data.tableFormat.removeColumn[1]);
+    }
+
+    if(data.tableFormat.boldColumns?.length != 0) {
+        data.tableFormat.boldColumns?.forEach((cell) => {
+            const col = worksheet.getColumn(cell);
+            col.font = { bold: true };
+        })
     }
 
     return workbook;
